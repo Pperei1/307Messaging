@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" type="text/css" href="style.css">
+<body text="#FFFFFF" bgcolor="#800000">
+
+
+
+	<div class = "topLoginBar"> 
+		<div class = "topLogo">
+			<a href = "index.html">
+				<img src="simple1.jpg" alt="Logo" align="fit" height="150px">
+			</a>
+		</div>
+
+		<div class = "topUnamePass">
+			</br>
+			Username:<input type="text" id="uname" name="uname" size="30"/></br>
+			</br>
+			Password:<input type=password id="pass" name="pass" size="30"/>
+		
+			<form id="frm1" method="post" action="login.php" onsubmit="return convertEncryptJSON();">
+			<input type="hidden" name ="jsonString" value=""></p>
+			<button id = "login"  >Login</button>
+			</form>
+
+		</div>
+	</div>
+
+
+
+	<div class="signUp">
+		Sign UP 
+		
+		<form id="frm2" method="post" action="signup.php" >
+			</br>
+			<input type="text" id="SignUpUname" placeholder= "username" name="SignUpUname" size="30"/></br>
+			</br>
+			<input type=password id="signUpPass"  placeholder= "password" name="signUpPass" size="30"/>
+			</br>
+			<button id = "login" alignment="center" >Sign Up</button>
+		</form>
+
+			
+	</div>
+
+
+
+	<p id="print"/>
+
+	<script>
+		function convertEncryptJSON(){
+
+			var userName="";
+			var passWord="";
+			var i;
+			var parse="";
+			userName+=document.getElementById("uname").value;
+			passWord+=document.getElementById("pass").value;
+
+			var myform = document.getElementById("frm1");
+
+			var jsonString="";
+			var encryptPass = "";
+			var key = 3;
+
+			if(userName == "" || passWord == ""){
+				alert("Proper Username/Password!!");
+				return false;
+			} 
+
+			else{
+				//encrypt the password string
+				for (var i = 0; i < passWord.length; i++) {
+					var c = passWord.charCodeAt(i);
+					var n = parseInt(passWord.charAt(i));
+					var result=0;
+					//Uppercase
+					if(c>=65&&c<=90){
+						encryptPass += String.fromCharCode((c-65+key)%26+65); 
+					}  
+					//Lowercase
+					else if(c>=97&&c<=122){
+						encryptPass += String.fromCharCode((c-97+key)%26+97);
+					} 
+					//numbers
+					else if(n>=0&&n<=9){
+						if(n+key>9){
+							result = n+key-10;
+							encryptPass += result.toString();
+						}
+						else{
+							result = n+key;
+							encryptPass += result.toString();	
+						}
+					}
+
+					//neither
+					else encryptPass += passWord.charAt(i);  // Copy
+				}
+
+				//make into a jsonString
+				jsonString = JSON.stringify( {username: new String(userName), password: new String(encryptPass)});
+
+				myform.elements[0].value = jsonString;
+				document.getElementById("print") = jsonString;
+				return true;
+
+			}
+		}
+	</script>
+
+</body>
+</html>
