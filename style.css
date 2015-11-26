@@ -1,0 +1,58 @@
+body{
+	background-color: black;
+	font-family: "Times New Roman", Times, serif;
+	color:black;
+	background-image: url(Simple4.jpg) ;
+	background-size: auto;
+	background-attachment: fixed;
+}
+h1{
+	color:black;
+	text-align: center;
+}
+form{
+	text-align:right;
+}
+
+.topLoginBar {
+	height: 150px;
+	position: relative;
+	background-color:yellow;
+	background-position: bottom;
+	width:auto; 
+	max-width: 100%;
+	max-height: 100%;
+}
+
+.topLogo{
+	float:left;
+	border-style:solid;
+}
+.topLogo a{
+	text-align: center;
+}
+.topLogo img{
+	max-width: auto;
+	max-height: auto;
+	vertical-align: center;
+}
+
+.topUnamePass{
+	border-style:solid;
+	position: relative;
+	text-align: right;
+	vertical-align: center;
+	float:right;
+}
+
+.signUp{
+	border-style:solid;
+	position: relative;
+	vertical-align: center;
+	text-align: left;
+	float:right;
+}
+
+.signUp input.placeholder{
+	text-align: center;
+}
