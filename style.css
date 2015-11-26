@@ -51,9 +51,21 @@ form{
 	float:right;
 }
 
+
 .topUnamePass form{
 	text-align: center;
 }
+
+.topUnamePass form button{
+	text-align: center;
+	font-family: 'Comic Sans MS';
+	font-size: 15px;
+	font-style: normal;
+	font-variant: normal;
+}
+
+
+
 
 .signUp{
 	position: relative;
@@ -65,15 +77,21 @@ form{
 
 .signUp p{
 	text-align: center;
-	font-family: 'Avant Garde';
+	font-family: 'Comic Sans MS';
 	font-size: 24px;
 	font-style: normal;
 	font-variant: normal;
-	font-weight: 500;
-	line-height: 26.4px;
 }
 
 
 .signUp form{
 	text-align: center;
+}
+
+.signUp form button{
+	text-align: center;
+	font-family: 'Comic Sans MS';
+	font-size: 15px;
+	font-style: normal;
+	font-variant: normal;
 }
