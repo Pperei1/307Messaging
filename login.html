@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>comp307Messaging</title>
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+	</head>
+	
+<body text="#FFFFFF" bgcolor="#FFFFFF">
+	<div id='login_wrap'>
+	<div class = "topLoginBar"> 
+		<div class = "topLogo">
+			<a href = "index.html">
+				<img src="pictures/simple2.png" alt="Logo" align="fit" height="125px">
+			</a>
+		</div>
+
+		<div class = "topUnamePass">
+			<form class="form-inline" id="login">
+			<div class ="form-group">
+				<label for="user">Username:</label>
+				<input type = "text" class="form-control" id="user" name = "Username">
+			</div>
+			<div class ="form-group">
+				<label for="user">Password:</label>
+				<input type = "text" class="form-control" id="pass" name = "Password">
+			</div>
+			</form>
+		<button class = "btn btn-primary" onclick="submitLog()">Submit</button>
+		</div>
+	</div>
+	</div>
+	
+	<div id="main">
+	</div>
+		
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>	
+		
+	<script>
+		
+		function submitLog(){
+			var x = document.getElementById("login");
+			var t = {"username":x.elements[0].value};
+			var e = JSON.stringify(t);
+			url = "http://localhost/307Messaging/shared";
+			post_ajax_data(url,e,function(data){
+				var encryptedPass = cipher(x.elements[1].value,parseInt(data));
+				var text = {"username":x.elements[0].value ,"password" : encryptedPass};
+				var encode = JSON.stringify(text);
+				url = "http://localhost/307Messaging/login";
+				post_ajax_data(url,encode, makeMain);
+			}
+			);	
+		}
+		
+		function logout(){
+			var x = document.getElementById("logout");
+			var text = {"sessionID":x.elements[0].value};
+			var encode = JSON.stringify(text);
+			url = "http://localhost/307Messaging/logout";
+			post_ajax_data(url,encode, function(data){
+				document.getElementById("login_wrap").innerHTML = "";
+				document.getElementById("main").innerHTML = data;
+			}
+			);
+		}
+		
+		function post_ajax_data(url, encodedata, success){		
+			$.ajax({
+			type:"POST",
+			url:url,
+			data:encodedata,
+			dataType:"text",
+			contentType: 'application/json',
+			cache:false,
+			timeout:20000,
+			async:true,
+			success:function(data){
+				success.call(this, data);
+			},
+			error:function(data){
+				alert("Error In Connecting");
+			}
+			});
+		}
+		
+		function cipher(str,inc) {
+			var n = '';
+			for (var i = 0; i < str.length; i ++) {
+				var c = str.charCodeAt(i);
+				if ((c >= 65) && (c <= 90)){
+					ch = String.fromCharCode(((c-65+inc)%26)+65);
+				}
+				else if (c >= 97){
+					ch = String.fromCharCode(((c-97+inc)%26)+97);
+				}
+				n += ch;
+			}
+			return n;
+		}
+		
+		function makeMain(){
+			document.getElementById("login_wrap").innerHTML = "";
+			var myString = '<div class="top_logout">'+
+					'<p>this is where the logout goes</p>'+
+				'</div>'+
+				'<div class="center_wrap">'+
+					'<div class="chat_wrap">'+
+						'<p>this is where the chat goes</p>'+
+					'</div>'+
+					'<div class="side_bar">'+
+						'<div class="add_friends">'+
+							'<p>this is where search button goes</p>'+
+						'</div>'+
+						'<div id="lf" class="list_friends">'+
+							'<button class="b_friend>this is where list of friends goes</button><br>'+
+							'<button class="b_friend>this is where list of friends goes</button><br>'+
+							'<button class="b_friend>this is where list of friends goes</button><br>'+
+						'</div>'+
+					'</div>'+
+				'</div>'
+			document.getElementById("main").innerHTML = myString;
+		}
+		
+		
+	</script>
+	</body>
+</html>
