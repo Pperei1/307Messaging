@@ -29,6 +29,7 @@
 				<input type = "text" class="form-control" id="pass" name = "Password">
 			</div>
 			</form>
+<<<<<<< HEAD
 		<button class = "btn btn-primary" onclick="submitLog()">Log In</button>
 		</div>
 	</div>
@@ -48,10 +49,16 @@
 			<button class = "brn btn-primary" alignment="center" onclick="signup()" >Sign Up</button>
 
 	</div>
+=======
+		<button class = "btn btn-primary" onclick="submitLog()">Submit</button>
+		</div>
+	</div>
+>>>>>>> origin/master
 	</div>
 	
 	<div id="main">
 	</div>
+<<<<<<< HEAD
 	<div id="test">
 	</div>
 	<div id="test2" class="test2">
@@ -59,6 +66,9 @@
 	<div id="test3" class="test2">
 	</div>
 	</body>
+=======
+		
+>>>>>>> origin/master
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>	
 		
 	<script>
@@ -78,6 +88,7 @@
 			);	
 		}
 		
+<<<<<<< HEAD
 		function signup(){
 			var x = document.getElementById("signup");
 			var key = rndNum();
@@ -95,6 +106,8 @@
 
 		}
 
+=======
+>>>>>>> origin/master
 		function logout(){
 			var x = document.getElementById("logout");
 			var text = {"sessionID":x.elements[0].value};
@@ -141,6 +154,7 @@
 			return n;
 		}
 		
+<<<<<<< HEAD
 		function rndNum(){
 			return Math.random()*(5);
 		}
@@ -167,10 +181,30 @@
 							'<p id="friend_add_msg"></p>'
 						'</div>'+
 						'<div id="listFriends" class="list_friends">'+
+=======
+		function makeMain(){
+			document.getElementById("login_wrap").innerHTML = "";
+			var myString = '<div class="top_logout">'+
+					'<p>this is where the logout goes</p>'+
+				'</div>'+
+				'<div class="center_wrap">'+
+					'<div class="chat_wrap">'+
+						'<p>this is where the chat goes</p>'+
+					'</div>'+
+					'<div class="side_bar">'+
+						'<div class="add_friends">'+
+							'<p>this is where search button goes</p>'+
+						'</div>'+
+						'<div id="lf" class="list_friends">'+
+							'<button class="b_friend>this is where list of friends goes</button><br>'+
+							'<button class="b_friend>this is where list of friends goes</button><br>'+
+							'<button class="b_friend>this is where list of friends goes</button><br>'+
+>>>>>>> origin/master
 						'</div>'+
 					'</div>'+
 				'</div>'
 			document.getElementById("main").innerHTML = myString;
+<<<<<<< HEAD
 			var hidden ='<form id="logout">'+
 						'<input type = "hidden" value = "^sessionID" >'+
 						'<input type = "hidden" value = "^username" >'+
@@ -274,6 +308,11 @@
 					});
 			}
 		}	
+=======
+		}
+		
+		
+>>>>>>> origin/master
 	</script>
 	</body>
 </html>
