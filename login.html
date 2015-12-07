@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>comp307Messaging</title>
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+	</head>
+	
+<body text="#FFFFFF" bgcolor="#FFFFFF">
+	<div id='login_wrap'>
+	<div class = "topLoginBar"> 
+		<div class = "topLogo">
+			<a href = "index.html">
+				<img src="pictures/simple2.png" alt="Logo" align="fit" height="125px">
+			</a>
+		</div>
+
+		<div class = "topUnamePass">
+			<form class="form-inline" id="login">
+			<div class ="form-group">
+				<label for="user">Username:</label>
+				<input type = "text" class="form-control" id="user" name = "Username">
+			</div>
+			<div class ="form-group">
+				<label for="user">Password:</label>
+				<input type = "text" class="form-control" id="pass" name = "Password">
+			</div>
+			</form>
+		<button class = "btn btn-primary" onclick="submitLog()">Log In</button>
+		</div>
+	</div>
+	<div class="signUp">
+		<p>Sign Up</p> 
+		
+			<form class="form-inline" id="signup">
+			<div class ="form-group">
+				<label for="user">Username:</label>
+				<input type = "text" class="form-control" id="user" name = "Username">
+			</div>
+			<div class ="form-group">
+				<label for="user">Password:</label>
+				<input type = "text" class="form-control" id="pass" name = "Password">
+			</div>
+			</form>
+			<button class = "brn btn-primary" alignment="center" onclick="signup()" >Sign Up</button>
+
+	</div>
+	</div>
+	
+	<div id="main">
+	</div>
+	<div id="test">
+	</div>
+	<div id="test2" class="test2">
+	</div>
+	<div id="test3" class="test2">
+	</div>
+	</body>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>	
+		
+	<script>
+		
+		function submitLog(){
+			var x = document.getElementById("login");
+			var t = {"username":x.elements[0].value};
+			var e = JSON.stringify(t);
+			url = "http://localhost/307Messaging/shared";
+			post_ajax_data(url,e,function(data){
+				var encryptedPass = cipher(x.elements[1].value,parseInt(data));
+				var text = {"username":x.elements[0].value ,"password" : encryptedPass};
+				var encode = JSON.stringify(text);
+				url = "http://localhost/307Messaging/login";
+				post_ajax_data(url,encode, makeMain);
+			}
+			);	
+		}
+		
+		function signup(){
+			var x = document.getElementById("signup");
+			var key = rndNum();
+			var text = {"username":x.elements[0].value ,"password" : x.elements[1].value, "key" : key};
+			var encode = JSON.stringify(text);
+			url = "http://localhost/307Messaging/signup";
+			post_ajax_data(url,encode, function(data){
+				document.getElementById("test").innerHTML = data;
+				var encryptedPass = cipher(x.elements[1].value,parseInt(data));
+				var text = {"username":x.elements[0].value ,"password" : encryptedPass};
+				var encode = JSON.stringify(text);
+				url = "http://localhost/307Messaging/login";
+				post_ajax_data(url,encode, makeMain);
+			});
+
+		}
+
+		function logout(){
+			var x = document.getElementById("logout");
+			var text = {"sessionID":x.elements[0].value};
+			var encode = JSON.stringify(text);
+			url = "http://localhost/307Messaging/logout";
+			post_ajax_data(url,encode, function(data){
+				document.getElementById("login_wrap").innerHTML = "";
+				document.getElementById("main").innerHTML = data;
+			}
+			);
+		}
+		
+		function post_ajax_data(url, encodedata, success){		
+			$.ajax({
+			type:"POST",
+			url:url,
+			data:encodedata,
+			dataType:"text",
+			contentType: 'application/json',
+			cache:false,
+			timeout:20000,
+			async:true,
+			success:function(data){
+				success.call(this, data);
+			},
+			error:function(data){
+				alert("Error In Connecting");
+			}
+			});
+		}
+		
+		function cipher(str,inc) {
+			var n = '';
+			for (var i = 0; i < str.length; i ++) {
+				var c = str.charCodeAt(i);
+				if ((c >= 65) && (c <= 90)){
+					ch = String.fromCharCode(((c-65+inc)%26)+65);
+				}
+				else if (c >= 97){
+					ch = String.fromCharCode(((c-97+inc)%26)+97);
+				}
+				n += ch;
+			}
+			return n;
+		}
+		
+		function rndNum(){
+			return Math.random()*(5);
+		}
+
+		function makeMain(data){
+			document.getElementById("login_wrap").innerHTML = "";
+			var myString = '<div class="top_logout">'+
+					'<button class = "btn btn-primary" onclick="logout()">logout</button>'+
+				'</div>'+
+				'<div class="center_wrap">'+
+					'<div class="chat_wrap">'+
+						'<div id="chat-area"></div>'+
+							'<form id="send-message-area">'+
+								'<p id="messages">Your messages:</p>'+
+								'<textarea id="sendie" maxlength = "100"></textarea><br>'+
+							'</form>'+
+							'<button id="sendMessage" onclick="sendMessage()">Send Message</button>'
+						'</div>'+
+					'</div>'+
+					'<div class="side_bar">'+
+						'<div class="add_friends">'+
+							'<input type="text" id="AddfriendBox" placeholder= "Search for friend" name="AddfriendBox" size="30"/>'+
+							'<button id = "signup" alignment="center" onclick="addfriend()" >Search</button>'+
+							'<p id="friend_add_msg"></p>'
+						'</div>'+
+						'<div id="listFriends" class="list_friends">'+
+						'</div>'+
+					'</div>'+
+				'</div>'
+			document.getElementById("main").innerHTML = myString;
+			var hidden ='<form id="logout">'+
+						'<input type = "hidden" value = "^sessionID" >'+
+						'<input type = "hidden" value = "^username" >'+
+						'<input type = "hidden" value = "^memberID" >'+
+						'<input id="currenF" type = "hidden" value = "main" >'+
+						'</form>';
+			d = JSON.parse(data);
+			hidden = hidden.replace("^username",d.username);
+			hidden = hidden.replace("^memberID",d.memberID);
+			document.getElementById("test").innerHTML = hidden;
+			loadFriend();
+		}
+
+		function addfriend(){
+			var x = document.getElementById("logout");
+			var y = document.getElementById("AddfriendBox");
+			var text = {"adder":x.elements[1].value,"newFriend":y.value};
+			var encode = JSON.stringify(text);
+			url = "http://localhost/307Messaging/add";
+			post_ajax_data(url,encode,function(data){
+				d = JSON.parse(data);
+				if(d.success=="False"){
+					document.getElementById("friend_add_msg").innerHTML = d.msg;
+				}
+				else{
+					document.getElementById("friend_add_msg").innerHTML = d.msg;
+					loadFriend();
+				}
+			})
+		}
+
+		function loadFriend(){
+			var x = document.getElementById("logout");
+			var text = {"user":x.elements[1].value};
+			var encode = JSON.stringify(text);
+			url = "http://localhost/307Messaging/loadFriend";
+			post_ajax_data(url,encode,function(data){
+				list = JSON.parse(data);
+				var updatelist = "";
+				var name;
+				var temp;
+				for(i = 0; i<list.length; i++){
+					name = list[i].username;
+					temp = '<button id ="'+ name +'" alignment="center" value = "'+name +'" onclick="updateChatUsername(this)"> '+name+'</button></br>';
+					updatelist += temp;
+				}
+				if(list.length>0){
+					document.getElementById("test2").innerHTML = updatelist;
+				}
+				else{
+					document.getElementById("test2").innerHTML = "no friends";
+				}
+			}
+			);
+		}
+		
+		function updateChatUsername(button){
+			document.getElementById("logout").elements[3].value = button.value;
+			setInterval("updateChat()",1000);
+		}
+		
+		function sendMessage(){
+			if(document.getElementById("logout").elements[3].value == "main"){
+			}
+			else{
+				var i = document.getElementById("sendie");
+				var x = document.getElementById("logout");
+				var text = {"user":x.elements[1].value,"friend":x.elements[3].value,"message":i.value};
+				var encode = JSON.stringify(text);
+				url = "http://localhost/307Messaging/sendMessage"
+				post_ajax_data(url,encode,function(data){
+					i.value = '';
+					updateChat();
+				});
+			}
+		}
+		
+		function updateChat(){
+			if(document.getElementById("logout").elements[3].value == "Main"){
+			}
+			else{
+				var x = document.getElementById("logout");
+				var text = {"user":x.elements[1].value,"friend":x.elements[3].value};
+				var encode = JSON.stringify(text);
+				url = "http://localhost/307Messaging/updateChat";
+				post_ajax_data(url,encode,function(data){
+					list = JSON.parse(data);
+					var messages = "";
+					for(i = 0; i<list.length; i++){
+						name = list[i].username;
+						mess = list[i].message;
+						temp = '<p> '+name+':'+mess+'</p></br>';
+						messages += temp;
+					}
+					if(list.length>0){
+						document.getElementById("messages").innerHTML = messages;
+					}
+					else{
+						document.getElementById("messages").innerHTML = "No messages";
+					}
+					});
+			}
+		}	
+	</script>
+	</body>
+</html>
